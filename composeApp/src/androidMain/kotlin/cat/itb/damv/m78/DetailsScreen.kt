@@ -1,9 +1,6 @@
 package cat.itb.damv.m78
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -13,16 +10,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
+import org.jetbrains.annotations.Async
 
 @Composable
-fun MarkerDetailScreen(
-    markerId: String,
-    navViewModel: NavViewModel,
-    markersViewModel: MarkersViewModel = viewModel()
-) {
-    val marker = markersViewModel.getMarkerById(markerId) ?: return
-    var title by remember { mutableStateOf(marker.title) }
-    var description by remember { mutableStateOf(marker.description) }
+fun MarkerDetailScreen(markViewModel: MarkersViewModel = viewModel(), navViewModel: NavViewModel = viewModel(), camViewModel: CameraViewModel = viewModel()) {
+    val itb = markViewModel.marker.value
+    val lastPhoto = camViewModel.photoUrl.value
+
+    var title by remember { mutableStateOf(itb.title) }
+    var description by remember { mutableStateOf(itb.description) }
+    var photo by remember { mutableStateOf(itb.photo) }
+
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Editar marcador", fontWeight = FontWeight.Bold, fontSize = 20.sp)
@@ -39,9 +38,36 @@ fun MarkerDetailScreen(
             label = { Text("Descripció") }
         )
         Spacer(Modifier.height(20.dp))
+
+        if (photo.isNotEmpty()) {
+            AsyncImage(
+                model = photo,
+                contentDescription = null,
+                modifier = Modifier.size(200.dp)
+            )
+        }
+
+        if (lastPhoto != null) {
+            if (photo.isEmpty()) {
+                Button(onClick = {
+                    photo = camViewModel.photoUrl.value.toString()
+                }) {
+                    Text("Utilitzar última foto")
+                }
+            }
+        }
+        else {
+            Button(onClick = {
+                navViewModel.navTo(Screen.Camera)
+            }) {
+                Text("Fer Foto")
+            }
+        }
+
+
+        Spacer(Modifier.height(20.dp))
         Button(onClick = {
-            markersViewModel.updateMarker(marker.copy(title = title, description = description))
-            navViewModel.navTo(Screen.Markers)
+            markViewModel.marker.value = itb.copy(title = title, description = description, photo = photo)
         }) {
             Text("Desar")
         }

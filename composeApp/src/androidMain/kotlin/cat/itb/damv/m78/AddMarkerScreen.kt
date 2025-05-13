@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.model.LatLng
 
-@Composable
+/*@Composable
 fun AddMarkerScreen(
     viewModel: MarkersViewModel = viewModel(),
     onAddMarker: (MarkerData) -> Unit,
@@ -94,3 +94,4 @@ fun AddMarkerScreen(
         }
     }
 }
+*/

@@ -10,11 +10,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // path = composeApp/build/outputs/apk/debug/composeApp-debug.apk
+
         setContent {
             //App()
             //MapsScreen()
-            //Navigation()
-            CameraScreen()
+            Navigation()
+            //CameraScreen()
         }
     }
 }

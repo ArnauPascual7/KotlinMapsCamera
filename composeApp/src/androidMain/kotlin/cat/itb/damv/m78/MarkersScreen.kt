@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-
+/*
 @Composable
 fun MarkersScreen(viewModel: MarkersViewModel = viewModel(), navViewModel: NavViewModel = viewModel()) {
     val markers = viewModel.markers
@@ -70,4 +70,4 @@ fun MarkersScreen(viewModel: MarkersViewModel = viewModel(), navViewModel: NavVi
             }
         }
     }
-}
+}*/

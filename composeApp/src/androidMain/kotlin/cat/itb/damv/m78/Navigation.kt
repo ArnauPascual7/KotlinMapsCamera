@@ -16,14 +16,13 @@ import kotlinx.coroutines.launch
 
 sealed interface Screen {
     data object Map: Screen
-    data object Markers: Screen
-    data object Details : Screen
-    data object AddMarker : Screen
+    data object Details: Screen
+    data object Camera: Screen
 }
 
 class NavViewModel : ViewModel() {
     val currentScreen = mutableStateOf<Screen>(Screen.Map)
-    var selectedMarkerId by mutableStateOf<String?>(null)
+
     fun navTo(screen: Screen) { currentScreen.value = screen }
 }
 
@@ -41,7 +40,7 @@ fun Navigation() {
             ModalDrawerSheet {
                 Text("Menú")
                 NavigationDrawerItem(
-                    label = { Text("Map") },
+                    label = { Text("Mapa") },
                     selected = false,
                     icon = { Icon(Icons.Default.Place, contentDescription = "Map") },
                     onClick = {
@@ -50,11 +49,20 @@ fun Navigation() {
                     }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Markers") },
+                    label = { Text("Càmera") },
                     selected = false,
                     icon = { Icon(Icons.Default.Search, contentDescription = "Markers") },
                     onClick = {
-                        navViewModel.navTo(Screen.Markers)
+                        navViewModel.navTo(Screen.Camera)
+                        scope.launch { drawerState.close() }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Detalls") },
+                    selected = false,
+                    icon = { Icon(Icons.Default.Search, contentDescription = "Detalls") },
+                    onClick = {
+                        navViewModel.navTo(Screen.Details)
                         scope.launch { drawerState.close() }
                     }
                 )
@@ -77,7 +85,7 @@ fun Navigation() {
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu"
+                                contentDescription = "Menú"
                             )
                         }
                     }
@@ -87,8 +95,9 @@ fun Navigation() {
             Box(modifier = Modifier.padding(padding)) {
                 when (currentScreen) {
                     Screen.Map -> MapsScreen()
-                    Screen.Markers -> MarkersScreen()
-                    Screen.Details -> navViewModel.selectedMarkerId?.let { markerId ->
+                    Screen.Camera -> CameraScreen()
+                    Screen.Details -> MarkerDetailScreen()
+                    /*Screen.Details -> navViewModel.selectedMarkerId?.let { markerId ->
                         MarkerDetailScreen(markerId, navViewModel)
                     }
                     Screen.AddMarker -> AddMarkerScreen(
@@ -98,7 +107,7 @@ fun Navigation() {
                         onCancel = {
                             navViewModel.navTo(Screen.Markers)
                         }
-                    )
+                    )*/
                 }
             }
         }
